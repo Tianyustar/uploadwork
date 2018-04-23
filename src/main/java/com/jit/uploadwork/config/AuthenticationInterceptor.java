@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private IUserService userService;
-
+    private final int OVER_TIME = 1000*60*60; // 1 小时过期
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
         // 如果不是映射到方法直接通过
@@ -42,13 +42,19 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 throw new RuntimeException("无token，请重新登录");
             }
             int userId;
+            Long currentTime = null;
             try {
                 userId = Integer.parseInt(JWT.decode(token).getAudience().get(0));  // 获取 token 中的 user id
+                currentTime = JWT.decode(token).getIssuedAt().getTime();// 获取token生成的时间
+               if (System.currentTimeMillis() - currentTime > OVER_TIME)  // token过期
+               {
+                   throw  new RuntimeException("token过期，请重新登录");
+               }
             } catch (JWTDecodeException e) {
                 throw new RuntimeException("token无效，请重新登录");
             }
             User user = userService.selectById(userId);
-            if (user == null) {
+            if (user == null  ) {
                 throw new RuntimeException("用户不存在，请重新登录");
             }
             // 验证 token
@@ -59,6 +65,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 } catch (JWTVerificationException e) {
                     throw new RuntimeException("token无效，请重新登录");
                 }
+
             } catch (UnsupportedEncodingException ignore) {}
             request.setAttribute("currentUser", user);
             return true;

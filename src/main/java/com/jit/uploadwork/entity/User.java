@@ -1,5 +1,8 @@
 package com.jit.uploadwork.entity;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +20,7 @@ public class User implements Serializable {
     private String userName;
     private String password;
     private String role;
+    @TableId(value = "student_num")
     private Integer studentNum;
 
 
