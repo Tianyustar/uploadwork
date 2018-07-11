@@ -8,6 +8,7 @@
         <result column="student_num" property="studentNum" />
         <result column="time" property="time" />
         <result column="file_name" property="fileName" />
+        <result column="url_address" property="urlAddress" />
     </resultMap>
 
 </mapper>

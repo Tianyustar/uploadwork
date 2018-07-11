@@ -25,7 +25,7 @@ public class GeneratorUtil {
     public void generateCode() {
         String packageName = "com.jit.uploadwork";
         initDataSource();
-        generateByTables(packageName, "user", "upload_cord");
+        generateByTables(packageName, "user", "upload_cord","student_list");
     }
 
     private void initDataSource() {

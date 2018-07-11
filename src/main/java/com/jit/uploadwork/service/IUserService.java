@@ -14,6 +14,21 @@ import com.jit.uploadwork.utils.TMessage;
  */
 public interface IUserService extends IService<User> {
 
+        /**
+         * loging
+         * @param studentNum
+         * @param password
+         * @return
+         */
         TMessage login(Integer studentNum, String password);
+
+        /**
+         * 修改密码功能， 要求提供旧密码进行验证
+         * @param user
+         * @param oldPassword
+         * @param newPassword
+         * @return
+         */
+        TMessage modifyPwd(User user ,String oldPassword, String newPassword);
 
 }

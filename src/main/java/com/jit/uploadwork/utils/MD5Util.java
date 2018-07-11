@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException;
 public class MD5Util {
     public static String getMD5(String str) {
         StringBuilder sb = new StringBuilder();
-        char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
-                'B', 'C', 'D', 'E', 'F'};
+        char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
+                'b', 'c', 'd', 'e', 'f'};
         byte[] b = str.getBytes();
         MessageDigest md;
         try {
@@ -33,7 +33,9 @@ public class MD5Util {
     }*/
 
     public static void main(String[] args) {
-        System.out.println(getMD5("123"));
-        System.out.println(getMD5(getMD5("123")));
+        System.out.println(getMD5("liuyunxing"));
+        System.out.println(getMD5("1234"));
+        System.out.println(getMD5(getMD5("123456")));
+        System.out.println("编码错了 ");
     }
 }

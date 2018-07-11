@@ -9,5 +9,4 @@
         <result column="password" property="password" />
         <result column="role" property="role" />
     </resultMap>
-
 </mapper>

@@ -6,6 +6,8 @@ import com.jit.uploadwork.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /*
  获得token
@@ -17,7 +19,7 @@ public class AuthenticationService {
     public String getToken(User user){
         String token = "";
         try {
-            token = JWT.create().withAudience(user.getStudentNum() +"") // 将userid保存到token里面
+            token = JWT.create().withAudience(user.getStudentNum() +"").withIssuedAt(new Date())// 将userid保存到token里面
                     .sign(Algorithm.HMAC256(user.getPassword()));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

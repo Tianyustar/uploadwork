@@ -9,6 +9,9 @@ import com.jit.uploadwork.utils.TMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>
  *  服务实现类
@@ -21,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
 
-    AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
     @Autowired
     public UserServiceImpl(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
@@ -31,19 +34,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public TMessage login(Integer studentNum, String password) {
 
         TMessage message ;
-        User user =  selectById(studentNum);
+        User user= selectById(studentNum);
         if (user == null) {
             message = new TMessage(TMessage.CODE_FAILURE,"用户不存在，请输入正确的学号");
         } else {
             String  DBPassword = user.getPassword();
-            if (DBPassword.equals(MD5Util.getMD5(password))) {
+            if (password!= null && DBPassword.equals(MD5Util.getMD5(password))) {
 
                 String token=   authenticationService.getToken(user);
-                message = new TMessage(TMessage.CODE_SUCCESS,"登陆成功",token);
+                Map<String ,String> info  = new HashMap<>(); // hash map
+                info.put("token",token);
+                info.put("username",user.getUserName());
+                info.put("role",user.getRole());
+                message = new TMessage(TMessage.CODE_SUCCESS,"登陆成功",info);
             } else  {
                 message = new TMessage(TMessage.CODE_FAILURE, "登陆失败，请输入正确的密码");
             }
         }
         return message;
+    }
+
+    @Override
+    public TMessage modifyPwd(User user, String oldPassword, String newPassword) {
+
+        if (user.getPassword().equals(MD5Util.getMD5(oldPassword))) {  // 匹配,可以修改密码
+                if ( newPassword == null || newPassword.trim().equals("") || newPassword.length() < 6) {
+                   return new TMessage(TMessage.CODE_FAILURE, "新密码不可以位空");
+                }
+                // 修改密码
+                user.setPassword(MD5Util.getMD5(newPassword)); // 设置了新密码
+                updateById(user);
+                return new TMessage(TMessage.CODE_SUCCESS,"修改密码成功，请重新登陆");
+        }
+        return new TMessage(TMessage.CODE_FAILURE,"旧密码输入不正确");
     }
 }
