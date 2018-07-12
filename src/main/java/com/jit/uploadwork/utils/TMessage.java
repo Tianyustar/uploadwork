@@ -1,9 +1,11 @@
 package com.jit.uploadwork.utils;
 
+import java.io.Serializable;
+
 /**
  *   create by lyx  in 1.14
  */
-public class TMessage {
+public class TMessage implements Serializable {
     public static final int CODE_SUCCESS = 1, CODE_FAILURE = -1;
     private int code;
     private String info;

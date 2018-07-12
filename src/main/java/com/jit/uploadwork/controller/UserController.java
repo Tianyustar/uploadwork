@@ -10,13 +10,13 @@ import com.jit.uploadwork.service.IUserService;
 import com.jit.uploadwork.utils.MD5Util;
 import com.jit.uploadwork.utils.RegexUtils;
 import com.jit.uploadwork.utils.TMessage;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * <p>
@@ -37,12 +37,12 @@ public class UserController {
         this.iUserService = iUserService;
     }
 
-    @RequestMapping("")
+    @DeleteMapping("")
     public String test()  {
         return "success test";
     }
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
     @CrossOrigin
     public TMessage login( String studentNum,  String password)  {
 
@@ -56,9 +56,10 @@ public class UserController {
     }
 
     @CrossOrigin
-    @RequestMapping("/modifyPwd")
+    @PostMapping("/modifyPwd")
     @LoginRequired
-    public TMessage modifyPwd(@CurrentUser User user, String oldPassword, String newPassword) {
+
+    public TMessage modifyPwd( @CurrentUser User user, String oldPassword, String newPassword) {
         return iUserService.modifyPwd(user, oldPassword, newPassword);
     }
 

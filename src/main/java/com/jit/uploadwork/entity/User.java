@@ -1,5 +1,6 @@
 package com.jit.uploadwork.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -17,12 +18,21 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableField(exist = false ) // 数据库中不存在此字段，忽略此字段
+    private String redisKey;//redis中的key
     private String userName;
     private String password;
     private String role;
     @TableId(value = "student_num")
     private Integer studentNum;
 
+    public String getRedisKey() {
+        return redisKey;
+    }
+
+    public void setRedisKey(String keyStr) {
+        this.redisKey = "user_"+keyStr;
+    }
 
     public String getUserName() {
         return userName;
@@ -56,13 +66,15 @@ public class User implements Serializable {
         this.studentNum = studentNum;
     }
 
+
     @Override
     public String toString() {
         return "User{" +
-        ", userName=" + userName +
-        ", password=" + password +
-        ", role=" + role +
-        ", studentNum=" + studentNum +
-        "}";
+                "redisKey='" + redisKey + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", studentNum=" + studentNum +
+                '}';
     }
 }

@@ -7,8 +7,11 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.jit.uploadwork.utils.MD5Util;
 import com.jit.uploadwork.utils.TMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +33,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         this.authenticationService = authenticationService;
     }
 
+    @Resource
+    private UserRedisServiceImpl userRedisService;
+
+    @Cacheable(value="userCache") //缓存,这里没有指定key.
     @Override
     public TMessage login(Integer studentNum, String password) {
 
@@ -53,7 +60,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         return message;
     }
-
+    //allEntries 清空缓存所有属性 确保更新后缓存刷新
+    @CacheEvict(value="userCache", allEntries=true)
     @Override
     public TMessage modifyPwd(User user, String oldPassword, String newPassword) {
 
